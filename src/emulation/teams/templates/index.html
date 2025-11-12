@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teams Clone - Channel Posts</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="teams-wrapper">
+        <!-- Left Sidebar -->
+        <aside class="left-sidebar">
+            <div class="nav-icons">
+                <div class="nav-icon active">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2L3 7v11h14V7l-7-5z"/>
+                    </svg>
+                </div>
+                <div class="nav-icon">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                        <path d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 14a6 6 0 110-12 6 6 0 010 12z"/>
+                        <circle cx="10" cy="10" r="3"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <div class="teams-list">
+                <div class="team-section">
+                    <div class="team-header">
+                        <span>Your teams</span>
+                    </div>
+                    <div class="team-item expanded">
+                        <div class="team-name">
+                            <span class="team-icon">C</span>
+                            <span>Contoso</span>
+                            <span class="expand-icon">▼</span>
+                        </div>
+                        <div class="channels-list">
+                            <div class="channel-item">General</div>
+                            <div class="channel-item active">Vertex AI</div>
+                            <div class="channel-item">Announcements</div>
+                            <div class="channel-item">Breakroom</div>
+                            <div class="channel-item">Design</div>
+                            <div class="channel-item">Marketing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Channel Header -->
+            <div class="channel-header">
+                <div class="channel-title">
+                    <span class="channel-icon">V</span>
+                    <span>Vertex AI</span>
+                </div>
+                <div class="channel-tabs">
+                    <div class="tab active">Posts</div>
+                    <div class="tab">Files</div>
+                    <div class="tab">Notes</div>
+                    <div class="tab-add">+</div>
+                </div>
+            </div>
+
+            <!-- New Post Area -->
+            <div class="new-post-area">
+                <div class="new-post-input">
+                    <div class="user-avatar-small">U</div>
+                    <input type="text" placeholder="Start a new post" id="new-post-trigger">
+                </div>
+                <div class="new-post-buttons">
+                    <button class="btn-post">Post</button>
+                    <button class="btn-announcement">Announcement</button>
+                </div>
+            </div>
+
+            <!-- New Post Form (Hidden by default) -->
+            <div class="new-post-form-container" id="new-post-form-container" style="display: none;">
+                <form id="new-post-form">
+                    <div class="form-group">
+                        <input type="text" id="post-title" placeholder="Post title (optional)" style="width: 100%; padding: 10px 12px; border: 1px solid #e1dfdd; border-radius: 4px; font-size: 14px; margin-bottom: 12px;">
+                    </div>
+                    <div class="form-user-info">
+                        <input type="text" id="user-name" placeholder="Your name" required>
+                        <input type="text" id="user-role" placeholder="Your role" required>
+                    </div>
+                    <textarea id="post-message" placeholder="What's on your mind?" rows="5" required></textarea>
+                    <div class="form-actions">
+                        <button type="button" class="btn-cancel" onclick="cancelNewPost()">Cancel</button>
+                        <button type="submit" class="btn-send">Send</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Posts Container -->
+            <div class="posts-container" id="posts-container">
+                <!-- Posts will be dynamically loaded here -->
+            </div>
+        </main>
+
+        <!-- Right Sidebar -->
+        <aside class="right-sidebar">
+            <div class="sidebar-header">
+                <span class="confidential-badge">Confidential</span>
+                <div class="sidebar-actions">
+                    <span>⋯</span>
+                    <span>📹</span>
+                    <span>▼</span>
+                    <span>📤</span>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <div class="section-title">In this channel</div>
+                
+                <div class="people-section">
+                    <div class="section-header">
+                        <span>People (208)</span>
+                        <a href="#" class="see-all">See all</a>
+                    </div>
+                    <div class="people-avatars">
+                        <div class="avatar-small">A</div>
+                        <div class="avatar-small">B</div>
+                        <div class="avatar-small">C</div>
+                        <div class="avatar-small">D</div>
+                        <div class="avatar-small">+</div>
+                    </div>
+                </div>
+
+                <div class="description-section">
+                    <div class="section-header">
+                        <span>Description</span>
+                    </div>
+                    <div class="description-text">
+                        Channel for the Alexandria launch planning and preparation.
+                    </div>
+                </div>
+
+                <div class="pinned-section">
+                    <div class="section-header">
+                        <span>Pinned</span>
+                        <a href="#" class="see-all">See all</a>
+                    </div>
+                    <div class="pinned-items">
+                        <div class="pinned-item">
+                            <div class="pinned-title">Have you seen the latest updates...</div>
+                            <div class="pinned-author">Daisy Phillips, 1 hour ago</div>
+                        </div>
+                        <div class="pinned-item">
+                            <div class="pinned-title">Can everyone sign up to be inclu....</div>
+                            <div class="pinned-author">Cecil Folk, Yesterday</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-options">
+                <div class="option-item">
+                    <span>🔍</span>
+                    <span>Find in channel</span>
+                </div>
+                <div class="option-item">
+                    <span>🔔</span>
+                    <span>Channel notifications</span>
+                </div>
+                <div class="option-item">
+                    <span>⚙️</span>
+                    <span>Manage channel</span>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Edit Message</h2>
+            <form id="edit-form">
+                <input type="hidden" id="edit-id" name="id">
+                <input type="hidden" id="edit-type" name="type">
+                <div class="form-group">
+                    <textarea id="edit-message" name="message" rows="4" required></textarea>
+                </div>
+                <button type="submit" class="btn-primary">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
