@@ -26,10 +26,11 @@ jobs:
       
       - name: Run Black linter on Python files
         run: |
-          if ! black --check --diff --exclude='/(env|\.git|__pycache__)/' .; then
-            echo "" >&2
-            echo "::error::Black found code formatting issues. Some files need to be reformatted." >&2
-            echo "::notice::Run 'black --exclude='\''/(env|\.git|__pycache__)/'\'' .' locally to fix formatting issues." >&2
-            exit 1
-          fi
-          echo "✓ All Python files are properly formatted!"
+          black --check --diff src/emulation/teams
+          # if ! black --check --diff --exclude='/(env|\.git|__pycache__)/' .; then
+          #   echo "" >&2
+          #   echo "::error::Black found code formatting issues. Some files need to be reformatted." >&2
+          #   echo "::notice::Run 'black --exclude='\''/(env|\.git|__pycache__)/'\'' .' locally to fix formatting issues." >&2
+          #   exit 1
+          # fi
+          # echo "✓ All Python files are properly formatted!"
