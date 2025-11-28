@@ -27,4 +27,5 @@ jobs:
       - name: Run Black linter on Python files
         run: |
           black --check --diff --exclude='/(env|\.git|__pycache__)/' .
+          echo "error: cannot format src/emulation/teams/app.py: Oh no! 💥 💔 💥"
           exit 1
