@@ -45,8 +45,8 @@ let lastKnownState = {
 // Check for updates
 async function checkForUpdates() {
     try {
-        const response = await fetch(`${API_BASE}/posts`);
-        const posts = await response.json();
+        // Get all posts with replies for comparison
+        const posts = await loadAllPostsWithReplies();
         
         // Get current state
         const currentPostIds = new Set(posts.map(p => p.id));
@@ -77,7 +77,7 @@ async function checkForUpdates() {
         if (hasNewPosts || hasNewReplies) {
             loadPosts();
         } else {
-            // No changes, just update state to current
+            // No changes detected, update state
             lastKnownState.postIds = new Set(currentPostIds);
             lastKnownState.replyCounts = {...currentReplyCounts};
         }
@@ -89,8 +89,7 @@ async function checkForUpdates() {
 // Initialize last known state on first load
 async function initializeState() {
     try {
-        const response = await fetch(`${API_BASE}/posts`);
-        const posts = await response.json();
+        const posts = await loadAllPostsWithReplies();
         updateLastKnownState(posts);
     } catch (error) {
         console.error('Error initializing state:', error);
@@ -139,17 +138,48 @@ function setupEventListeners() {
     }
 }
 
+// Load all posts with their replies
+async function loadAllPostsWithReplies() {
+    try {
+        // Use the full posts endpoint for frontend
+        const response = await fetch(`${API_BASE}/posts/full`);
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error(`HTTP error! status: ${response.status}, body: ${errorText}`);
+            throw new Error(`HTTP error! status: ${response.status}, message: ${errorText}`);
+        }
+        const posts = await response.json();
+        
+        // Validate response is an array
+        if (!Array.isArray(posts)) {
+            console.error('Invalid response format:', posts);
+            throw new Error('Invalid response format: expected array');
+        }
+        
+        // If no posts, return empty array
+        if (posts.length === 0) {
+            return [];
+        }
+        
+        return posts;
+    } catch (error) {
+        console.error('Error loading posts with replies:', error);
+        console.error('Error stack:', error.stack);
+        throw error;
+    }
+}
+
 // Load Posts
 async function loadPosts() {
     try {
-        const response = await fetch(`${API_BASE}/posts`);
-        const posts = await response.json();
+        const posts = await loadAllPostsWithReplies();
         displayPosts(posts);
         // Update last known state after loading
         updateLastKnownState(posts);
     } catch (error) {
         console.error('Error loading posts:', error);
-        postsContainer.innerHTML = '<div class="empty-state"><h3>Error loading posts</h3><p>Please try again later.</p></div>';
+        console.error('Error details:', error.message, error.stack);
+        postsContainer.innerHTML = '<div class="empty-state"><h3>Error loading posts</h3><p>Please try again later.</p><p style="font-size: 12px; color: #8a8886;">Error: ' + error.message + '</p></div>';
     }
 }
 
@@ -354,14 +384,18 @@ async function handleCreateReply(event) {
     const formData = new FormData(event.target);
     const postId = event.target.getAttribute('data-post-id');
     const replyData = {
-        post_id: postId,
         user: formData.get('user'),
         role: formData.get('role'),
         message: formData.get('message')
     };
     
+    if (!replyData.user || !replyData.role || !replyData.message) {
+        alert('Please fill in all reply fields.');
+        return;
+    }
+    
     try {
-        const response = await fetch(`${API_BASE}/replies`, {
+        const response = await fetch(`${API_BASE}/posts/${postId}/replies`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -373,6 +407,8 @@ async function handleCreateReply(event) {
             event.target.reset();
             loadPosts();
         } else {
+            const errorText = await response.text();
+            console.error('Error creating reply:', response.status, errorText);
             alert('Error creating reply. Please try again.');
         }
     } catch (error) {

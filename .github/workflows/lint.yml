@@ -1,0 +1,30 @@
+name: Lint Python Code
+
+on:
+  push:
+    branches:
+      - main
+      - 'feat/*'
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Run Black linter on Python files
+        run: |
+          black --check --diff --exclude='/(env|\.git|__pycache__)/' .
+          exit 1

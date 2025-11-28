@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import List, Optional
 from datetime import datetime
@@ -8,6 +9,15 @@ import uuid
 import os
 
 app = FastAPI(title="Teams Clone API")
+
+# Add CORS middleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, specify actual origins
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Get base directory
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -100,6 +110,13 @@ class Reply(BaseModel):
     timestamp: str
 
 
+class PostSummary(BaseModel):
+    """Simplified post model for list view (no replies)"""
+    id: str
+    title: Optional[str] = None
+    message: str
+
+
 # API Routes
 @app.get("/", response_class=HTMLResponse)
 async def read_root():
@@ -109,16 +126,38 @@ async def read_root():
         return HTMLResponse(content=f.read())
 
 
-@app.get("/api/posts", response_model=List[Post])
+@app.get("/api/posts", response_model=List[PostSummary])
 async def get_posts():
-    """Get all posts with their replies"""
-    posts_with_replies = []
-    for post in posts_db:
-        post_replies = [reply for reply in replies_db if reply["post_id"] == post["id"]]
-        post_dict = post.copy()
-        post_dict["replies"] = post_replies
-        posts_with_replies.append(post_dict)
-    return posts_with_replies
+    """Get all posts - returns id, title, and message (without replies)"""
+    return [
+        PostSummary(id=post["id"], title=post.get("title"), message=post["message"])
+        for post in posts_db
+    ]
+
+
+@app.get("/api/posts/full", response_model=List[Post])
+async def get_posts_full():
+    """Get all posts with their replies - for frontend use"""
+    try:
+        posts_with_replies = []
+        for post in posts_db:
+            post_replies = [reply for reply in replies_db if reply["post_id"] == post["id"]]
+            post_dict = {
+                "id": post["id"],
+                "title": post.get("title"),
+                "user": post["user"],
+                "role": post["role"],
+                "message": post["message"],
+                "timestamp": post["timestamp"],
+                "replies": post_replies
+            }
+            posts_with_replies.append(post_dict)
+        return posts_with_replies
+    except Exception as e:
+        print(f"Error in get_posts_full: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Internal server error: {str(e)}")
 
 
 @app.get("/api/posts/{post_id}", response_model=Post)
@@ -250,4 +289,3 @@ async def delete_reply(reply_id: str):
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
-
