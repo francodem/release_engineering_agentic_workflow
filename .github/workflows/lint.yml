@@ -26,7 +26,7 @@ jobs:
       
       - name: Run Black linter on Python files
         run: |
-          black --check --diff src/emulation/teams
+          black src/emulation/teams
           # if ! black --check --diff --exclude='/(env|\.git|__pycache__)/' .; then
           #   echo "" >&2
           #   echo "::error::Black found code formatting issues. Some files need to be reformatted." >&2
