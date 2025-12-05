@@ -40,7 +40,7 @@ def init_sample_data():
             "title": "M190.0.0 Google Vertex AI Release",
             "user": "Cristina M.",
             "role": "Program Manager",
-            "message": "Hello everyone, this is the deployment plan to start today with it. Please check the component ID here: vertex-ai-re-agent.",
+            "message": "Hello everyone, this is the deployment plan to start today with it. Please check the component ID here: release_engineering_agentic_workflow.",
             "timestamp": datetime.now().isoformat()
         }
         posts_db.append(sample_post)
@@ -288,4 +288,4 @@ async def delete_reply(reply_id: str):
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run("app:app", host="0.0.0.0", port=8000, reload=True)
