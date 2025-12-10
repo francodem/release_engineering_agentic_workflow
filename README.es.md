@@ -1,3 +1,5 @@
+![Demo Agéntico de Release Engineering](src/assets/re-agent.jpg)
+
 # Demo de Workflow Agéntico de Release Engineering
 
 Este repositorio contiene un demo de un sistema de workflow agéntico que automatiza procesos de release engineering. El sistema integra workflows de n8n con un emulador de Microsoft Teams para demostrar workflows automatizados de aprobación de despliegues y ejecución de pipelines CI/CD.

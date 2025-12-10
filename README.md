@@ -1,3 +1,5 @@
+![Agentic Release Engineering Demo](src/assets/re-agent.jpg)
+
 # Release Engineering Agentic Workflow Demo
 
 This repository contains a demo of an agentic workflow system that automates release engineering processes. The system integrates n8n workflows with a Microsoft Teams emulator to demonstrate automated deployment approval workflows and CI/CD pipeline execution.
