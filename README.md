@@ -30,6 +30,7 @@ The demo consists of three main components:
 - Python 3.10+ (for running the Teams emulator)
 - n8n account (or use the provided Docker setup)
 - Network access to the Teams emulator API from the n8n container
+- Jira trial account with API token (required for the workflow to function)
 
 ## Setup Instructions
 
@@ -103,7 +104,45 @@ After running this command, n8n will be accessible at `http://localhost:5678`.
 4. Similarly, update the **"TA-01 - Get Microsoft Teams post replies"** node:
    - The base URL should be: `http://<YOUR_IP>:8000/api/posts/<POST_ID>/replies`
 
-### Step 5: Execute the Workflow
+### Step 5: Configure Jira Integration
+
+**Required**: The workflow requires Jira integration to function properly. You need to set up Jira credentials in n8n:
+
+1. **Create a Jira Trial Account**:
+   - Go to [https://www.atlassian.com/try/cloud/signup](https://www.atlassian.com/try/cloud/signup)
+   - Sign up for a free Jira trial account
+   - Complete the setup process and note your Jira domain URL (e.g., `your-domain.atlassian.net`)
+
+2. **Generate an API Token**:
+   - Log in to your Jira account
+   - Click on your profile picture in the top right corner
+   - Go to **Account Settings** → **Security** → **API tokens**
+   - Click **Create API token**
+   - Give it a label (e.g., "n8n Integration")
+   - Copy the generated API token (you won't be able to see it again)
+
+3. **Configure Jira Credentials in n8n**:
+   - In n8n, go to **Settings** → **Credentials**
+   - Click **Add Credential** and search for "Jira"
+   - Select **Jira Software Cloud API**
+   - Fill in the following:
+     - **Domain**: Your Jira domain URL (e.g., `your-domain.atlassian.net`)
+     - **Email**: Your Jira account email address
+     - **API Token**: The API token you generated in step 2
+   - Click **Save** and give it a name (e.g., "Jira n8n Demo GDG Conn")
+
+4. **Assign Credentials to Jira Agent Nodes**:
+   - In the imported workflow, find the **"Jira Manager Agent"** node
+   - Locate the Jira tool nodes:
+     - **"Create_an_issue_in_Jira_Software"**
+     - **"Get_the_status_of_an_issue_in_Jira_Software"**
+   - For each node, click on the credentials dropdown
+   - Select the Jira credentials you created in step 3
+   - Save the workflow
+
+**Important**: The workflow requires Jira integration to function. Make sure all Jira nodes are properly configured before executing the workflow.
+
+### Step 6: Execute the Workflow
 
 1. In n8n, activate the workflow (toggle the switch in the top right)
 2. Open the chat interface for the workflow
