@@ -280,9 +280,5 @@ To add new workflows to the n8n agent:
 
 ## License
 
-[Add your license information here]
-
-## Contributing
-
-[Add contributing guidelines here]
+This project is licensed under the MIT License.
 

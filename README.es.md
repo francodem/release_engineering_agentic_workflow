@@ -280,9 +280,5 @@ Para agregar nuevos workflows al agente de n8n:
 
 ## Licencia
 
-[Agrega tu información de licencia aquí]
-
-## Contribuir
-
-[Agrega las guías de contribución aquí]
+Este proyecto está licenciado bajo la Licencia MIT.
 
